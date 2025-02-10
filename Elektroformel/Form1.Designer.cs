@@ -1,6 +1,6 @@
 ﻿namespace Elektroformel
 {
-    partial class Form1
+    partial class hovedside
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(hovedside));
             pictureBox1 = new PictureBox();
             valgtformel = new TextBox();
             label1 = new Label();
@@ -35,7 +37,6 @@
             label2 = new Label();
             label3 = new Label();
             utregningohm = new TextBox();
-            regnutohm = new Button();
             Motstander = new TextBox();
             label10 = new Label();
             spenning = new TextBox();
@@ -52,11 +53,9 @@
             label13 = new Label();
             label14 = new Label();
             fullastspenning = new TextBox();
-            fulllasthestekreft = new CheckBox();
             label15 = new Label();
             label16 = new Label();
-            fullastvirkningsgraden = new TextBox();
-            label17 = new Label();
+            cosphimotorfullast = new TextBox();
             label4 = new Label();
             label5 = new Label();
             utregningmoment = new TextBox();
@@ -69,17 +68,20 @@
             label18 = new Label();
             momrpm = new TextBox();
             label19 = new Label();
-            panel1 = new Panel();
+            label21 = new Label();
+            cosP = new TextBox();
             regnutvirkingsgrad = new Button();
-            label20 = new Label();
             panel2 = new Panel();
+            fulllasthp = new TextBox();
+            label17 = new Label();
             panel3 = new Panel();
-            beregnvirkingsgrad = new CheckBox();
+            groupBox1 = new GroupBox();
             regnutmoment = new Button();
+            toolTip1 = new ToolTip(components);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBox1
@@ -107,7 +109,6 @@
             label1.Size = new Size(74, 15);
             label1.TabIndex = 2;
             label1.Text = "Valgt formel:";
-            label1.Click += label1_Click;
             // 
             // formalohm
             // 
@@ -141,17 +142,9 @@
             utregningohm.Multiline = true;
             utregningohm.Name = "utregningohm";
             utregningohm.ReadOnly = true;
+            utregningohm.ScrollBars = ScrollBars.Vertical;
             utregningohm.Size = new Size(297, 111);
             utregningohm.TabIndex = 6;
-            // 
-            // regnutohm
-            // 
-            regnutohm.Location = new Point(350, 295);
-            regnutohm.Name = "regnutohm";
-            regnutohm.Size = new Size(75, 23);
-            regnutohm.TabIndex = 15;
-            regnutohm.Text = "Regn ut";
-            regnutohm.UseVisualStyleBackColor = true;
             // 
             // Motstander
             // 
@@ -159,12 +152,13 @@
             Motstander.Name = "Motstander";
             Motstander.Size = new Size(286, 23);
             Motstander.TabIndex = 16;
-            Motstander.Text = "R1=2.0,R2=3.0";
+            toolTip1.SetToolTip(Motstander, "2.0,3.0,1");
+            Motstander.TextChanged += OmhRevurdering;
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(351, 88);
+            label10.Location = new Point(339, 73);
             label10.Name = "label10";
             label10.Size = new Size(43, 15);
             label10.TabIndex = 17;
@@ -176,7 +170,8 @@
             spenning.Name = "spenning";
             spenning.Size = new Size(286, 23);
             spenning.TabIndex = 18;
-            spenning.Text = "12V";
+            toolTip1.SetToolTip(spenning, "12V");
+            spenning.TextChanged += OmhRevurdering;
             // 
             // ampere
             // 
@@ -184,7 +179,8 @@
             ampere.Name = "ampere";
             ampere.Size = new Size(286, 23);
             ampere.TabIndex = 19;
-            ampere.Text = "400A";
+            toolTip1.SetToolTip(ampere, "400A");
+            ampere.TextChanged += OmhRevurdering;
             // 
             // effekt
             // 
@@ -192,43 +188,44 @@
             effekt.Name = "effekt";
             effekt.Size = new Size(286, 23);
             effekt.TabIndex = 20;
-            effekt.Text = "300W";
+            toolTip1.SetToolTip(effekt, "300W");
+            effekt.TextChanged += OmhRevurdering;
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(411, 91);
+            label8.Location = new Point(380, 91);
             label8.Name = "label8";
-            label8.Size = new Size(22, 15);
+            label8.Size = new Size(55, 15);
             label8.TabIndex = 21;
-            label8.Text = "R=";
+            label8.Text = "R(ohm)=";
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(411, 120);
+            label9.Location = new Point(370, 120);
             label9.Name = "label9";
-            label9.Size = new Size(23, 15);
+            label9.Size = new Size(60, 15);
             label9.TabIndex = 22;
-            label9.Text = "U=";
+            label9.Text = "U(V/mv)=";
             // 
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(411, 146);
+            label11.Location = new Point(371, 146);
             label11.Name = "label11";
-            label11.Size = new Size(18, 15);
+            label11.Size = new Size(58, 15);
             label11.TabIndex = 23;
-            label11.Text = "I=";
+            label11.Text = "I(A/mA)=";
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(411, 177);
+            label12.Location = new Point(386, 177);
             label12.Name = "label12";
-            label12.Size = new Size(22, 15);
+            label12.Size = new Size(41, 15);
             label12.TabIndex = 24;
-            label12.Text = "P=";
+            label12.Text = "P(W)=";
             // 
             // utregningfullast
             // 
@@ -236,22 +233,24 @@
             utregningfullast.Multiline = true;
             utregningfullast.Name = "utregningfullast";
             utregningfullast.ReadOnly = true;
-            utregningfullast.Size = new Size(297, 111);
+            utregningfullast.ScrollBars = ScrollBars.Vertical;
+            utregningfullast.Size = new Size(404, 117);
             utregningfullast.TabIndex = 25;
             // 
             // regnutfulllast
             // 
-            regnutfulllast.Location = new Point(71, 149);
+            regnutfulllast.Location = new Point(76, 139);
             regnutfulllast.Name = "regnutfulllast";
             regnutfulllast.Size = new Size(75, 23);
             regnutfulllast.TabIndex = 26;
             regnutfulllast.Text = "Regn ut";
             regnutfulllast.UseVisualStyleBackColor = true;
+            regnutfulllast.Click += motorfulllastampRegnUt;
             // 
             // fulllast3fas
             // 
             fulllast3fas.AutoSize = true;
-            fulllast3fas.Location = new Point(164, 80);
+            fulllast3fas.Location = new Point(204, 114);
             fulllast3fas.Name = "fulllast3fas";
             fulllast3fas.Size = new Size(63, 19);
             fulllast3fas.TabIndex = 27;
@@ -260,15 +259,16 @@
             // 
             // fulllastkw
             // 
-            fulllastkw.Location = new Point(58, 47);
+            fulllastkw.Location = new Point(76, 47);
             fulllastkw.Name = "fulllastkw";
             fulllastkw.Size = new Size(100, 23);
             fulllastkw.TabIndex = 28;
+            fulllastkw.Text = "2";
             // 
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(5, 50);
+            label13.Location = new Point(16, 50);
             label13.Name = "label13";
             label13.Size = new Size(47, 15);
             label13.TabIndex = 29;
@@ -277,28 +277,19 @@
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(19, 84);
+            label14.Location = new Point(3, 84);
             label14.Name = "label14";
-            label14.Size = new Size(23, 15);
+            label14.Size = new Size(60, 15);
             label14.TabIndex = 30;
-            label14.Text = "U=";
+            label14.Text = "U(V/mv)=";
             // 
             // fullastspenning
             // 
-            fullastspenning.Location = new Point(58, 81);
+            fullastspenning.Location = new Point(76, 81);
             fullastspenning.Name = "fullastspenning";
             fullastspenning.Size = new Size(100, 23);
             fullastspenning.TabIndex = 31;
-            // 
-            // fulllasthestekreft
-            // 
-            fulllasthestekreft.AutoSize = true;
-            fulllasthestekreft.Location = new Point(164, 47);
-            fulllasthestekreft.Name = "fulllasthestekreft";
-            fulllasthestekreft.Size = new Size(95, 19);
-            fulllasthestekreft.TabIndex = 32;
-            fulllasthestekreft.Text = "Hestekrefter?";
-            fulllasthestekreft.UseVisualStyleBackColor = true;
+            fullastspenning.Text = "1V";
             // 
             // label15
             // 
@@ -318,21 +309,12 @@
             label16.TabIndex = 34;
             label16.Text = "Motor full last ampere beregning";
             // 
-            // fullastvirkningsgraden
+            // cosphimotorfullast
             // 
-            fullastvirkningsgraden.Location = new Point(58, 110);
-            fullastvirkningsgraden.Name = "fullastvirkningsgraden";
-            fullastvirkningsgraden.Size = new Size(100, 23);
-            fullastvirkningsgraden.TabIndex = 35;
-            // 
-            // label17
-            // 
-            label17.AutoSize = true;
-            label17.Location = new Point(20, 113);
-            label17.Name = "label17";
-            label17.Size = new Size(22, 15);
-            label17.TabIndex = 36;
-            label17.Text = "η=";
+            cosphimotorfullast.Location = new Point(76, 110);
+            cosphimotorfullast.Name = "cosphimotorfullast";
+            cosphimotorfullast.Size = new Size(100, 23);
+            cosphimotorfullast.TabIndex = 35;
             // 
             // label4
             // 
@@ -354,17 +336,18 @@
             // 
             // utregningmoment
             // 
-            utregningmoment.Location = new Point(465, 42);
+            utregningmoment.Location = new Point(398, 20);
             utregningmoment.Multiline = true;
             utregningmoment.Name = "utregningmoment";
             utregningmoment.ReadOnly = true;
-            utregningmoment.Size = new Size(297, 111);
+            utregningmoment.ScrollBars = ScrollBars.Vertical;
+            utregningmoment.Size = new Size(360, 191);
             utregningmoment.TabIndex = 39;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(402, 24);
+            label6.Location = new Point(373, 2);
             label6.Name = "label6";
             label6.Size = new Size(63, 15);
             label6.TabIndex = 40;
@@ -376,6 +359,7 @@
             momkw.Name = "momkw";
             momkw.Size = new Size(100, 23);
             momkw.TabIndex = 41;
+            momkw.Text = "1";
             // 
             // label7
             // 
@@ -388,15 +372,16 @@
             // 
             // motorvi
             // 
-            motorvi.Location = new Point(56, 21);
+            motorvi.Location = new Point(39, 37);
             motorvi.Name = "motorvi";
             motorvi.Size = new Size(100, 23);
             motorvi.TabIndex = 43;
+            motorvi.Text = "1A";
             // 
             // motor3fasvirking
             // 
             motor3fasvirking.AutoSize = true;
-            motor3fasvirking.Location = new Point(162, 53);
+            motor3fasvirking.Location = new Point(211, 66);
             motor3fasvirking.Name = "motor3fasvirking";
             motor3fasvirking.Size = new Size(63, 19);
             motor3fasvirking.TabIndex = 44;
@@ -405,15 +390,16 @@
             // 
             // motorspenningu
             // 
-            motorspenningu.Location = new Point(56, 50);
+            motorspenningu.Location = new Point(39, 66);
             motorspenningu.Name = "motorspenningu";
             motorspenningu.Size = new Size(100, 23);
             motorspenningu.TabIndex = 46;
+            motorspenningu.Text = "1V";
             // 
             // label18
             // 
             label18.AutoSize = true;
-            label18.Location = new Point(17, 53);
+            label18.Location = new Point(0, 69);
             label18.Name = "label18";
             label18.Size = new Size(23, 15);
             label18.TabIndex = 45;
@@ -425,51 +411,51 @@
             momrpm.Name = "momrpm";
             momrpm.Size = new Size(100, 23);
             momrpm.TabIndex = 48;
+            momrpm.Text = "1";
             // 
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(19, 21);
+            label19.Location = new Point(2, 37);
             label19.Name = "label19";
             label19.Size = new Size(18, 15);
             label19.TabIndex = 47;
             label19.Text = "I=";
             // 
-            // panel1
+            // label21
             // 
-            panel1.Controls.Add(regnutvirkingsgrad);
-            panel1.Controls.Add(label20);
-            panel1.Controls.Add(motorvi);
-            panel1.Controls.Add(motor3fasvirking);
-            panel1.Controls.Add(label19);
-            panel1.Controls.Add(label18);
-            panel1.Controls.Add(motorspenningu);
-            panel1.Location = new Point(12, 100);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(240, 104);
-            panel1.TabIndex = 49;
+            label21.AutoSize = true;
+            label21.ImeMode = ImeMode.NoControl;
+            label21.Location = new Point(23, 113);
+            label21.Name = "label21";
+            label21.Size = new Size(40, 15);
+            label21.TabIndex = 54;
+            label21.Text = "cosP=";
+            // 
+            // cosP
+            // 
+            cosP.Location = new Point(211, 37);
+            cosP.Name = "cosP";
+            cosP.Size = new Size(100, 23);
+            cosP.TabIndex = 53;
+            cosP.Text = "0.9";
             // 
             // regnutvirkingsgrad
             // 
-            regnutvirkingsgrad.Location = new Point(64, 78);
+            regnutvirkingsgrad.Location = new Point(52, 95);
             regnutvirkingsgrad.Name = "regnutvirkingsgrad";
             regnutvirkingsgrad.Size = new Size(75, 23);
             regnutvirkingsgrad.TabIndex = 52;
             regnutvirkingsgrad.Text = "Regn ut";
             regnutvirkingsgrad.UseVisualStyleBackColor = true;
-            // 
-            // label20
-            // 
-            label20.AutoSize = true;
-            label20.Location = new Point(57, 5);
-            label20.Name = "label20";
-            label20.Size = new Size(115, 15);
-            label20.TabIndex = 48;
-            label20.Text = "Motor virkningsgrad";
+            regnutvirkingsgrad.Click += MotorVirkingsgradRegnut;
             // 
             // panel2
             // 
             panel2.BorderStyle = BorderStyle.FixedSingle;
+            panel2.Controls.Add(fulllasthp);
+            panel2.Controls.Add(label17);
+            panel2.Controls.Add(label21);
             panel2.Controls.Add(label15);
             panel2.Controls.Add(utregningfullast);
             panel2.Controls.Add(regnutfulllast);
@@ -478,42 +464,64 @@
             panel2.Controls.Add(label13);
             panel2.Controls.Add(label14);
             panel2.Controls.Add(fullastspenning);
-            panel2.Controls.Add(fulllasthestekreft);
-            panel2.Controls.Add(label17);
             panel2.Controls.Add(label16);
-            panel2.Controls.Add(fullastvirkningsgraden);
-            panel2.Location = new Point(12, 552);
+            panel2.Controls.Add(cosphimotorfullast);
+            panel2.Location = new Point(12, 563);
             panel2.Name = "panel2";
-            panel2.Size = new Size(763, 179);
+            panel2.Size = new Size(763, 168);
             panel2.TabIndex = 50;
+            // 
+            // fulllasthp
+            // 
+            fulllasthp.Location = new Point(204, 68);
+            fulllasthp.Name = "fulllasthp";
+            fulllasthp.Size = new Size(100, 23);
+            fulllasthp.TabIndex = 56;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.ImeMode = ImeMode.NoControl;
+            label17.Location = new Point(182, 50);
+            label17.Name = "label17";
+            label17.Size = new Size(111, 15);
+            label17.TabIndex = 55;
+            label17.Text = "HP(virkningsgrad)=";
             // 
             // panel3
             // 
             panel3.BorderStyle = BorderStyle.FixedSingle;
-            panel3.Controls.Add(beregnvirkingsgrad);
+            panel3.Controls.Add(groupBox1);
             panel3.Controls.Add(regnutmoment);
             panel3.Controls.Add(label5);
             panel3.Controls.Add(label4);
-            panel3.Controls.Add(panel1);
             panel3.Controls.Add(utregningmoment);
             panel3.Controls.Add(momrpm);
             panel3.Controls.Add(label6);
             panel3.Controls.Add(label7);
             panel3.Controls.Add(momkw);
             panel3.Location = new Point(12, 344);
+            panel3.Margin = new Padding(0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(765, 207);
+            panel3.Size = new Size(763, 216);
             panel3.TabIndex = 51;
             // 
-            // beregnvirkingsgrad
+            // groupBox1
             // 
-            beregnvirkingsgrad.AutoSize = true;
-            beregnvirkingsgrad.Location = new Point(239, 36);
-            beregnvirkingsgrad.Name = "beregnvirkingsgrad";
-            beregnvirkingsgrad.Size = new Size(138, 19);
-            beregnvirkingsgrad.TabIndex = 54;
-            beregnvirkingsgrad.Text = "Beregn virkningsgrad";
-            beregnvirkingsgrad.UseVisualStyleBackColor = true;
+            groupBox1.Anchor = AnchorStyles.None;
+            groupBox1.Controls.Add(motorspenningu);
+            groupBox1.Controls.Add(cosP);
+            groupBox1.Controls.Add(motor3fasvirking);
+            groupBox1.Controls.Add(label18);
+            groupBox1.Controls.Add(regnutvirkingsgrad);
+            groupBox1.Controls.Add(label19);
+            groupBox1.Controls.Add(motorvi);
+            groupBox1.Location = new Point(3, 95);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(374, 120);
+            groupBox1.TabIndex = 55;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Motor virkningsgrad";
             // 
             // regnutmoment
             // 
@@ -523,8 +531,9 @@
             regnutmoment.TabIndex = 53;
             regnutmoment.Text = "Regn ut";
             regnutmoment.UseVisualStyleBackColor = true;
+            regnutmoment.Click += MotorMomentRegnut;
             // 
-            // Form1
+            // hovedside
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -540,7 +549,6 @@
             Controls.Add(spenning);
             Controls.Add(label10);
             Controls.Add(Motstander);
-            Controls.Add(regnutohm);
             Controls.Add(utregningohm);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -548,16 +556,16 @@
             Controls.Add(label1);
             Controls.Add(valgtformel);
             Controls.Add(pictureBox1);
-            Name = "Form1";
-            Text = "Form1";
-            Load += Form1_Load;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "hovedside";
+            Text = "Elektroformler pt1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -571,7 +579,6 @@
         private Label label2;
         private Label label3;
         private TextBox utregningohm;
-        private Button regnutohm;
         private TextBox Motstander;
         private Label label10;
         private TextBox spenning;
@@ -588,11 +595,9 @@
         private Label label13;
         private Label label14;
         private TextBox fullastspenning;
-        private CheckBox fulllasthestekreft;
         private Label label15;
         private Label label16;
-        private TextBox fullastvirkningsgraden;
-        private Label label17;
+        private TextBox cosphimotorfullast;
         private Label label4;
         private Label label5;
         private TextBox utregningmoment;
@@ -605,12 +610,15 @@
         private Label label18;
         private TextBox momrpm;
         private Label label19;
-        private Panel panel1;
-        private Label label20;
         private Panel panel2;
         private Panel panel3;
         private Button regnutvirkingsgrad;
         private Button regnutmoment;
-        private CheckBox beregnvirkingsgrad;
+        private Label label21;
+        private TextBox cosP;
+        private GroupBox groupBox1;
+        private ToolTip toolTip1;
+        private Label label17;
+        private TextBox fulllasthp;
     }
 }

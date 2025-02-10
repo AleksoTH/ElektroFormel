@@ -9,11 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="formulaFlaticon.com.ico" />
     <None Remove="ohm.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="ohm.png" />
+    <EmbeddedResource Include="formulaFlaticon.com.ico" />
+    <EmbeddedResource Include="ohm.png" />
   </ItemGroup>
 
   <ItemGroup>
