@@ -38,22 +38,70 @@ namespace Elektroformel
             {
                 if (!string.IsNullOrEmpty(inputs[key].Text))
                 {
-                    if (key == "R" && inputs[key].Text.Contains(','))
+                    if (key == "R")
                     {
-                        var resistances = inputs[key].Text.Split(',').Select(s => double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out double r) ? r : (double?)null).ToList();
-                        if (resistances.Any(r => !r.HasValue)) return;
+                        string inputText = inputs[key].Text.Replace(" ", "");
+                        double totalResistance = 0;
 
-                        double totalResistance = 1.0 / resistances.Where(r => r.HasValue).Sum(r => 1.0 / r.Value);
-                        values[key] = totalResistance;
+                        if (inputText.Contains("+") || inputText.Contains(","))
+                        {
+                            var seriesParts = inputText.Split('+'); // Del opp seriekoblinger
 
-                        steps.Add($"Parallellmotstander: {inputs[key].Text}");
-                        steps.Add($"1/R_total = {string.Join(" + ", resistances.Select(r => $"1/{r.Value}"))}");
-                        steps.Add($"R_total = {FormatNumber(totalResistance)}Ω");
+                            foreach (var seriesPart in seriesParts)
+                            {
+                                if (seriesPart.Contains(","))
+                                {
+                                    var parallelResistances = seriesPart.Split(',')
+                                        .Select(s => double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out double r) ? r : (double?)null)
+                                        .ToList();
+
+                                    if (parallelResistances.Any(r => !r.HasValue))
+                                    {
+                                        utregningohm.Text = "Ugyldig motstandsverdi";
+                                        return;
+                                    }
+
+                                    double parallelTotal = 1.0 / parallelResistances.Where(r => r.HasValue).Sum(r => 1.0 / r.Value);
+                                    totalResistance += parallelTotal;
+
+                                    steps.Add($"Parallellkobling: {seriesPart}");
+                                    steps.Add($"1/R_parallel = {string.Join(" + ", parallelResistances.Select(r => $"1/{r.Value}"))}");
+                                    steps.Add($"R_parallel = {FormatNumber(parallelTotal)} Ω");
+                                }
+                                else if (double.TryParse(seriesPart, NumberStyles.Any, CultureInfo.InvariantCulture, out double r))
+                                {
+                                    totalResistance += r;
+                                    steps.Add($"Seriekobling: + {FormatNumber(r)} Ω");
+                                }
+                                else
+                                {
+                                    utregningohm.Text = "Ugyldig motstandsverdi";
+                                    return;
+                                }
+                            }
+                        }
+                        else if (double.TryParse(inputText, NumberStyles.Any, CultureInfo.InvariantCulture, out double singleR))
+                        {
+                            totalResistance = singleR;
+                            steps.Add($"Enkelt motstand: {FormatNumber(singleR)} Ω");
+                        }
+                        else
+                        {
+                            utregningohm.Text = "Ugyldig motstandsverdi";
+                            return;
+                        }
+
+                        values["R"] = totalResistance;
+                        steps.Add($"Total motstand: {FormatNumber(totalResistance)} Ω");
                     }
                     else
                     {
                         var parsed = ParseUnitValue(inputs[key].Text, inputs[key].BaseUnit);
-                        if (!parsed.HasValue) return;
+                        if (!parsed.HasValue)
+                        {
+                            utregningohm.Text = $"Ugyldig verdi for {key}";
+                            return;
+                        }
                         values[key] = parsed.Value.Value;
                         steps.Add($"{key} = {inputs[key].Text} ({FormatNumber(parsed.Value.Value)}{inputs[key].BaseUnit})");
                     }
@@ -66,11 +114,12 @@ namespace Elektroformel
                 utregningohm.Text = "Minimum to verdier kreves for beregning";
                 return;
             }
+
             string resultUnit = "";
             if (!values.ContainsKey("R"))
             {
                 formalohm.Text = formål[0];
-                resultUnit = inputs.ContainsKey("R") ? inputs["R"].BaseUnit:"ohm";
+                resultUnit = "Ω";
                 if (values.ContainsKey("U") && values.ContainsKey("I"))
                 {
                     values["R"] = values["U"] / values["I"];
@@ -90,7 +139,7 @@ namespace Elektroformel
             else if (!values.ContainsKey("U"))
             {
                 formalohm.Text = formål[1];
-                resultUnit = inputs.ContainsKey("V") ? inputs["V"].BaseUnit :"V";
+                resultUnit = "V";
                 if (values.ContainsKey("R") && values.ContainsKey("I"))
                 {
                     values["U"] = values["R"] * values["I"];
@@ -110,7 +159,7 @@ namespace Elektroformel
             else if (!values.ContainsKey("I"))
             {
                 formalohm.Text = formål[2];
-                resultUnit = inputs.ContainsKey("I") ? inputs["I"].BaseUnit:"A";
+                resultUnit = "A";
                 if (values.ContainsKey("U") && values.ContainsKey("R"))
                 {
                     values["I"] = values["U"] / values["R"];
@@ -130,7 +179,7 @@ namespace Elektroformel
             else if (!values.ContainsKey("P"))
             {
                 formalohm.Text = formål[3];
-                resultUnit = inputs.ContainsKey("P") ? inputs["P"].BaseUnit: "W";
+                resultUnit = "W";
                 if (values.ContainsKey("U") && values.ContainsKey("I"))
                 {
                     values["P"] = values["U"] * values["I"];
@@ -157,6 +206,7 @@ namespace Elektroformel
             steps.Add($"{valgtformel.Text} = {FormatNumber(values[valgtformel.Text.Split('=')[0].Trim()])} {resultUnit}");
             utregningohm.Text = string.Join(Environment.NewLine, steps);
         }
+
 
 
         private string FormatNumber(double value)
