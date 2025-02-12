@@ -45,8 +45,7 @@ namespace Elektroformel
 
                         if (inputText.Contains("+") || inputText.Contains(","))
                         {
-                            var seriesParts = inputText.Split('+'); // Del opp seriekoblinger
-
+                            var seriesParts = inputText.Split('+');
                             foreach (var seriesPart in seriesParts)
                             {
                                 if (seriesPart.Contains(","))
@@ -67,6 +66,25 @@ namespace Elektroformel
                                     steps.Add($"Parallellkobling: {seriesPart}");
                                     steps.Add($"1/R_parallel = {string.Join(" + ", parallelResistances.Select(r => $"1/{r.Value}"))}");
                                     steps.Add($"R_parallel = {FormatNumber(parallelTotal)} Ω");
+
+                                    // Beregn strøm over hver motstand hvis spenning er kjent
+                                    if (inputs.ContainsKey("U"))
+                                    {
+                                        steps.Add($"Strømfordeling i parallellkobling:");
+                                        var parsed = ParseUnitValue(inputs["U"].Text, inputs["U"].BaseUnit);
+                                        if (!parsed.HasValue)
+                                        {
+                                            return;
+                                        }
+                                        double totalCurrent = 0;
+                                        foreach (var r in parallelResistances)
+                                        {
+                                            double current = parsed.Value.Value / r.Value;
+
+                                            totalCurrent += current;
+                                            steps.Add($"I = {FormatNumber(parsed.Value.Value)}V / {FormatNumber(r.Value)}Ω = {FormatNumber(current)}A");
+                                        }
+                                    }
                                 }
                                 else if (double.TryParse(seriesPart, NumberStyles.Any, CultureInfo.InvariantCulture, out double r))
                                 {
