@@ -83,7 +83,7 @@ namespace Elektroformel
                         else if (double.TryParse(inputText, NumberStyles.Any, CultureInfo.InvariantCulture, out double singleR))
                         {
                             totalResistance = singleR;
-                            steps.Add($"Enkelt motstand: {FormatNumber(singleR)} Ω");
+                            steps.Add($"Motstand: {FormatNumber(singleR)} Ω");
                         }
                         else
                         {
