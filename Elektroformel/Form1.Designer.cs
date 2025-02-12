@@ -78,6 +78,7 @@
             groupBox1 = new GroupBox();
             regnutmoment = new Button();
             toolTip1 = new ToolTip(components);
+            label20 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -150,9 +151,9 @@
             // 
             Motstander.Location = new Point(441, 88);
             Motstander.Name = "Motstander";
+            Motstander.PlaceholderText = "2.0,3.0,1";
             Motstander.Size = new Size(286, 23);
             Motstander.TabIndex = 16;
-            toolTip1.SetToolTip(Motstander, "2.0,3.0,1");
             Motstander.TextChanged += OmhRevurdering;
             // 
             // label10
@@ -168,27 +169,27 @@
             // 
             spenning.Location = new Point(441, 117);
             spenning.Name = "spenning";
+            spenning.PlaceholderText = "12V";
             spenning.Size = new Size(286, 23);
             spenning.TabIndex = 18;
-            toolTip1.SetToolTip(spenning, "12V");
             spenning.TextChanged += OmhRevurdering;
             // 
             // ampere
             // 
             ampere.Location = new Point(441, 146);
             ampere.Name = "ampere";
+            ampere.PlaceholderText = "400A";
             ampere.Size = new Size(286, 23);
             ampere.TabIndex = 19;
-            toolTip1.SetToolTip(ampere, "400A");
             ampere.TextChanged += OmhRevurdering;
             // 
             // effekt
             // 
             effekt.Location = new Point(441, 174);
             effekt.Name = "effekt";
+            effekt.PlaceholderText = "300W";
             effekt.Size = new Size(286, 23);
             effekt.TabIndex = 20;
-            toolTip1.SetToolTip(effekt, "300W");
             effekt.TextChanged += OmhRevurdering;
             // 
             // label8
@@ -261,9 +262,9 @@
             // 
             fulllastkw.Location = new Point(76, 47);
             fulllastkw.Name = "fulllastkw";
+            fulllastkw.PlaceholderText = "2";
             fulllastkw.Size = new Size(100, 23);
             fulllastkw.TabIndex = 28;
-            fulllastkw.Text = "2";
             // 
             // label13
             // 
@@ -287,9 +288,9 @@
             // 
             fullastspenning.Location = new Point(76, 81);
             fullastspenning.Name = "fullastspenning";
+            fullastspenning.PlaceholderText = "1V";
             fullastspenning.Size = new Size(100, 23);
             fullastspenning.TabIndex = 31;
-            fullastspenning.Text = "1V";
             // 
             // label15
             // 
@@ -357,9 +358,9 @@
             // 
             momkw.Location = new Point(133, 63);
             momkw.Name = "momkw";
+            momkw.PlaceholderText = "1";
             momkw.Size = new Size(100, 23);
             momkw.TabIndex = 41;
-            momkw.Text = "1";
             // 
             // label7
             // 
@@ -374,9 +375,9 @@
             // 
             motorvi.Location = new Point(39, 37);
             motorvi.Name = "motorvi";
+            motorvi.PlaceholderText = "1A";
             motorvi.Size = new Size(100, 23);
             motorvi.TabIndex = 43;
-            motorvi.Text = "1A";
             // 
             // motor3fasvirking
             // 
@@ -392,9 +393,9 @@
             // 
             motorspenningu.Location = new Point(39, 66);
             motorspenningu.Name = "motorspenningu";
+            motorspenningu.PlaceholderText = "1V";
             motorspenningu.Size = new Size(100, 23);
             motorspenningu.TabIndex = 46;
-            motorspenningu.Text = "1V";
             // 
             // label18
             // 
@@ -409,9 +410,9 @@
             // 
             momrpm.Location = new Point(133, 34);
             momrpm.Name = "momrpm";
+            momrpm.PlaceholderText = "1";
             momrpm.Size = new Size(100, 23);
             momrpm.TabIndex = 48;
-            momrpm.Text = "1";
             // 
             // label19
             // 
@@ -436,9 +437,9 @@
             // 
             cosP.Location = new Point(211, 37);
             cosP.Name = "cosP";
+            cosP.PlaceholderText = "0.9";
             cosP.Size = new Size(100, 23);
             cosP.TabIndex = 53;
-            cosP.Text = "0.9";
             // 
             // regnutvirkingsgrad
             // 
@@ -487,6 +488,7 @@
             label17.Size = new Size(111, 15);
             label17.TabIndex = 55;
             label17.Text = "HP(virkningsgrad)=";
+            toolTip1.SetToolTip(label17, "Beregning av HP, da trenger man virkningraden");
             // 
             // panel3
             // 
@@ -509,6 +511,7 @@
             // groupBox1
             // 
             groupBox1.Anchor = AnchorStyles.None;
+            groupBox1.Controls.Add(label20);
             groupBox1.Controls.Add(motorspenningu);
             groupBox1.Controls.Add(cosP);
             groupBox1.Controls.Add(motor3fasvirking);
@@ -532,6 +535,16 @@
             regnutmoment.Text = "Regn ut";
             regnutmoment.UseVisualStyleBackColor = true;
             regnutmoment.Click += MotorMomentRegnut;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.ImeMode = ImeMode.NoControl;
+            label20.Location = new Point(165, 37);
+            label20.Name = "label20";
+            label20.Size = new Size(40, 15);
+            label20.TabIndex = 57;
+            label20.Text = "cosP=";
             // 
             // hovedside
             // 
@@ -620,5 +633,6 @@
         private ToolTip toolTip1;
         private Label label17;
         private TextBox fulllasthp;
+        private Label label20;
     }
 }
