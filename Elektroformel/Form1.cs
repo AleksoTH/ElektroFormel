@@ -70,7 +70,7 @@ namespace Elektroformel
             if (!values.ContainsKey("R"))
             {
                 formalohm.Text = formål[0];
-                resultUnit = inputs["R"].BaseUnit;
+                resultUnit = inputs.ContainsKey("R") ? inputs["R"].BaseUnit:"ohm";
                 if (values.ContainsKey("U") && values.ContainsKey("I"))
                 {
                     values["R"] = values["U"] / values["I"];
@@ -90,7 +90,7 @@ namespace Elektroformel
             else if (!values.ContainsKey("U"))
             {
                 formalohm.Text = formål[1];
-                resultUnit = inputs["V"].BaseUnit;
+                resultUnit = inputs.ContainsKey("V") ? inputs["V"].BaseUnit :"V";
                 if (values.ContainsKey("R") && values.ContainsKey("I"))
                 {
                     values["U"] = values["R"] * values["I"];
@@ -110,7 +110,7 @@ namespace Elektroformel
             else if (!values.ContainsKey("I"))
             {
                 formalohm.Text = formål[2];
-                resultUnit = inputs["I"].BaseUnit;
+                resultUnit = inputs.ContainsKey("I") ? inputs["I"].BaseUnit:"A";
                 if (values.ContainsKey("U") && values.ContainsKey("R"))
                 {
                     values["I"] = values["U"] / values["R"];
@@ -130,7 +130,7 @@ namespace Elektroformel
             else if (!values.ContainsKey("P"))
             {
                 formalohm.Text = formål[3];
-                resultUnit = inputs["P"].BaseUnit;
+                resultUnit = inputs.ContainsKey("P") ? inputs["P"].BaseUnit: "W";
                 if (values.ContainsKey("U") && values.ContainsKey("I"))
                 {
                     values["P"] = values["U"] * values["I"];

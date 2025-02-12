@@ -76,9 +76,10 @@
             label17 = new Label();
             panel3 = new Panel();
             groupBox1 = new GroupBox();
+            label20 = new Label();
             regnutmoment = new Button();
             toolTip1 = new ToolTip(components);
-            label20 = new Label();
+            label22 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -526,16 +527,6 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Motor virkningsgrad";
             // 
-            // regnutmoment
-            // 
-            regnutmoment.Location = new Point(239, 63);
-            regnutmoment.Name = "regnutmoment";
-            regnutmoment.Size = new Size(75, 23);
-            regnutmoment.TabIndex = 53;
-            regnutmoment.Text = "Regn ut";
-            regnutmoment.UseVisualStyleBackColor = true;
-            regnutmoment.Click += MotorMomentRegnut;
-            // 
             // label20
             // 
             label20.AutoSize = true;
@@ -546,11 +537,30 @@
             label20.TabIndex = 57;
             label20.Text = "cosP=";
             // 
+            // regnutmoment
+            // 
+            regnutmoment.Location = new Point(239, 63);
+            regnutmoment.Name = "regnutmoment";
+            regnutmoment.Size = new Size(75, 23);
+            regnutmoment.TabIndex = 53;
+            regnutmoment.Text = "Regn ut";
+            regnutmoment.UseVisualStyleBackColor = true;
+            regnutmoment.Click += MotorMomentRegnut;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new Point(347, 323);
+            label22.Name = "label22";
+            label22.Size = new Size(0, 15);
+            label22.TabIndex = 52;
+            // 
             // hovedside
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 730);
+            Controls.Add(label22);
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(label12);
@@ -571,7 +581,7 @@
             Controls.Add(pictureBox1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "hovedside";
-            Text = "Elektroformler pt1";
+            Text = "Elektroformler pt1 (Produsert av Aleksander TH)";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
@@ -634,5 +644,6 @@
         private Label label17;
         private TextBox fulllasthp;
         private Label label20;
+        private Label label22;
     }
 }
