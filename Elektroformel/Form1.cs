@@ -1,6 +1,8 @@
 using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Threading.Tasks;
 
 namespace Elektroformel
 {
@@ -19,7 +21,7 @@ namespace Elektroformel
         String[] ohmMotstand = ["U/I", "P/I^2", "U^2/P"];
         String[] ohmEffekt = ["R*I^2", "U^2/R", "U*I"];
         String[] ohmAmpere = ["U/R", "P/U", "sqrt(P/R)"];
-        String[] ohmSPenning = ["P/I","R*I","sqrt(R*P)"];
+        String[] ohmSPenning = ["P/I", "R*I", "sqrt(R*P)"];
 
         private void OmhRevurdering(object sender, EventArgs e)
         {
@@ -33,100 +35,136 @@ namespace Elektroformel
 
             var values = new Dictionary<string, double>();
             var steps = new List<string>();
+            bool hasUnknownResistor = false;
+            bool isSeriesUnknown = false;
+            List<double> knownResistorsInParallelGroup = null;
+            double sumKnownSeriesResistors = 0;
+            double sumKnownResistors = 0;
 
-            foreach (var key in inputs.Keys)
+            if (!string.IsNullOrEmpty(inputs["R"].Text))
             {
-                if (!string.IsNullOrEmpty(inputs[key].Text))
+                string inputText = inputs["R"].Text.Replace(" ", "");
+
+                if (inputText.Contains("+") || inputText.Contains(","))
                 {
-                    if (key == "R")
+                    var seriesParts = inputText.Split('+');
+                    foreach (var seriesPart in seriesParts)
                     {
-                        string inputText = inputs[key].Text.Replace(" ", "");
-                        double totalResistance = 0;
-
-                        if (inputText.Contains("+") || inputText.Contains(","))
+                        if (seriesPart.Contains(","))
                         {
-                            var seriesParts = inputText.Split('+');
-                            foreach (var seriesPart in seriesParts)
+                            var resistors = seriesPart.Split(',')
+                                .Select(s =>
+                                {
+                                    if (s.Trim() == "?")
+                                        return (Value: (double?)null, IsUnknown: true);
+                                    else if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out double r))
+                                        return (Value: r, IsUnknown: false);
+                                    else
+                                        return (Value: (double?)null, IsUnknown: false);
+                                })
+                                .ToList();
+
+                            if (resistors.Any(r => r.Value == null && !r.IsUnknown))
                             {
-                                if (seriesPart.Contains(","))
+                                utregningohm.Text = "Ugyldig motstandsverdi";
+                                return;
+                            }
+
+                            int unknownCount = resistors.Count(r => r.IsUnknown);
+                            if (unknownCount > 1)
+                            {
+                                utregningohm.Text = "Maks én ukjent motstand per parallellgruppe.";
+                                return;
+                            }
+                            else if (unknownCount == 1)
+                            {
+                                if (hasUnknownResistor)
                                 {
-                                    var parallelResistances = seriesPart.Split(',')
-                                        .Select(s => double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out double r) ? r : (double?)null)
-                                        .ToList();
-
-                                    if (parallelResistances.Any(r => !r.HasValue))
-                                    {
-                                        utregningohm.Text = "Ugyldig motstandsverdi";
-                                        return;
-                                    }
-
-                                    double parallelTotal = 1.0 / parallelResistances.Where(r => r.HasValue).Sum(r => 1.0 / r.Value);
-                                    totalResistance += parallelTotal;
-
-                                    steps.Add($"Parallellkobling: {seriesPart}");
-                                    steps.Add($"1/R_parallel = {string.Join(" + ", parallelResistances.Select(r => $"1/{r.Value}"))}");
-                                    steps.Add($"R_parallel = {FormatNumber(parallelTotal)} Ω");
-
-                                    // Beregn strøm over hver motstand hvis spenning er kjent
-                                    if (inputs.ContainsKey("U"))
-                                    {
-                                        steps.Add($"Strømfordeling i parallellkobling:");
-                                        var parsed = ParseUnitValue(inputs["U"].Text, inputs["U"].BaseUnit);
-                                        if (!parsed.HasValue)
-                                        {
-                                            return;
-                                        }
-                                        double totalCurrent = 0;
-                                        foreach (var r in parallelResistances)
-                                        {
-                                            double current = parsed.Value.Value / r.Value;
-
-                                            totalCurrent += current;
-                                            steps.Add($"I = {FormatNumber(parsed.Value.Value)}V / {FormatNumber(r.Value)}Ω = {FormatNumber(current)}A");
-                                        }
-                                    }
-                                }
-                                else if (double.TryParse(seriesPart, NumberStyles.Any, CultureInfo.InvariantCulture, out double r))
-                                {
-                                    totalResistance += r;
-                                    steps.Add($"Seriekobling: + {FormatNumber(r)} Ω");
-                                }
-                                else
-                                {
-                                    utregningohm.Text = "Ugyldig motstandsverdi";
+                                    utregningohm.Text = "Bare én ukjent motstand tillatt totalt.";
                                     return;
+                                }
+                                hasUnknownResistor = true;
+                                knownResistorsInParallelGroup = resistors.Where(r => !r.IsUnknown).Select(r => r.Value.Value).ToList();
+                                steps.Add($"Parallellkobling med ukjent: {seriesPart}");
+                            }
+                            else
+                            {
+                                double parallelTotal = 1.0 / resistors.Sum(r => 1.0 / r.Value.Value);
+                                sumKnownResistors += parallelTotal;
+                                steps.Add($"Parallellkobling: {string.Join(", ", resistors.Select(r => r.Value.Value))} → {FormatNumber(parallelTotal)} Ω");
+
+                                if (values.ContainsKey("U"))
+                                {
+                                    steps.Add("Strømfordeling:");
+                                    foreach (var r in resistors)
+                                    {
+                                        double current = values["U"] / r.Value.Value;
+                                        steps.Add($"I = {FormatNumber(values["U"])}V / {FormatNumber(r.Value.Value)}Ω = {FormatNumber(current)}A");
+                                    }
                                 }
                             }
                         }
-                        else if (double.TryParse(inputText, NumberStyles.Any, CultureInfo.InvariantCulture, out double singleR))
-                        {
-                            totalResistance = singleR;
-                            steps.Add($"Motstand: {FormatNumber(singleR)} Ω");
-                        }
                         else
                         {
-                            utregningohm.Text = "Ugyldig motstandsverdi";
-                            return;
+                            if (seriesPart.Trim() == "?")
+                            {
+                                if (hasUnknownResistor)
+                                {
+                                    utregningohm.Text = "Bare én ukjent motstand tillatt totalt.";
+                                    return;
+                                }
+                                hasUnknownResistor = true;
+                                isSeriesUnknown = true;
+                                steps.Add($"Seriekobling med ukjent: {seriesPart}");
+                            }
+                            else if (double.TryParse(seriesPart, NumberStyles.Any, CultureInfo.InvariantCulture, out double r))
+                            {
+                                sumKnownSeriesResistors += r;
+                                sumKnownResistors += r;
+                                steps.Add($"Seriekobling: + {FormatNumber(r)} Ω");
+                            }
+                            else
+                            {
+                                utregningohm.Text = "Ugyldig motstandsverdi";
+                                return;
+                            }
                         }
+                    }
 
-                        values["R"] = totalResistance;
-                        steps.Add($"Total motstand: {FormatNumber(totalResistance)} Ω");
-                    }
-                    else
+                    if (!hasUnknownResistor)
                     {
-                        var parsed = ParseUnitValue(inputs[key].Text, inputs[key].BaseUnit);
-                        if (!parsed.HasValue)
-                        {
-                            utregningohm.Text = $"Ugyldig verdi for {key}";
-                            return;
-                        }
-                        values[key] = parsed.Value.Value;
-                        steps.Add($"{key} = {inputs[key].Text} ({FormatNumber(parsed.Value.Value)}{inputs[key].BaseUnit})");
+                        values["R"] = sumKnownResistors;
+                        steps.Add($"Total motstand: {FormatNumber(sumKnownResistors)} Ω");
                     }
+                }
+                else if (double.TryParse(inputText, NumberStyles.Any, CultureInfo.InvariantCulture, out double singleR))
+                {
+                    values["R"] = singleR;
+                    steps.Add($"Motstand: {FormatNumber(singleR)} Ω");
+                }
+                else
+                {
+                    utregningohm.Text = "Ugyldig motstandsverdi";
+                    return;
                 }
             }
 
-            if (values.Count < 2)
+            foreach (var key in inputs.Keys.Where(k => k != "R"))
+            {
+                if (!string.IsNullOrEmpty(inputs[key].Text))
+                {
+                    var parsed = ParseUnitValue(inputs[key].Text, inputs[key].BaseUnit);
+                    if (!parsed.HasValue)
+                    {
+                        utregningohm.Text = $"Ugyldig verdi for {key}";
+                        return;
+                    }
+                    values[key] = parsed.Value.Value;
+                    steps.Add($"{key} = {inputs[key].Text} ({FormatNumber(parsed.Value.Value)}{inputs[key].BaseUnit})");
+                }
+            }
+
+            if ((values.Count < 2 && !hasUnknownResistor) || (hasUnknownResistor && values.Count < 2))
             {
                 valgtformel.Text = "Mangler inndata";
                 utregningohm.Text = "Minimum to verdier kreves for beregning";
@@ -214,14 +252,63 @@ namespace Elektroformel
                     valgtformel.Text = "P = U² / R";
                 }
             }
-            else
-            {
-                valgtformel.Text = "Ingen gyldig formel";
-                utregningohm.Text = "Kunne ikke beregne - mangler inndataverdier";
-                return;
-            }
 
             steps.Add($"{valgtformel.Text} = {FormatNumber(values[valgtformel.Text.Split('=')[0].Trim()])} {resultUnit}");
+
+            if (hasUnknownResistor)
+            {
+                if (!values.ContainsKey("R"))
+                {
+                    utregningohm.Text = "Ukjent motstand krever beregnet totalmotstand";
+                    return;
+                }
+
+                if (isSeriesUnknown)
+                {
+                    double R_ukjent = values["R"] - sumKnownSeriesResistors;
+                    steps.Add("Beregning av ukjent seriemotstand:");
+                    steps.Add($"R_ukjent = R_total(U/I) + sum_kjente_serie");
+                    steps.Add($"{FormatNumber(values["R"])}Ω - {FormatNumber(sumKnownSeriesResistors)}Ω = {FormatNumber(R_ukjent)}Ω");
+                    values["R"] = sumKnownSeriesResistors + R_ukjent;
+                }
+                else
+                {
+                    double R_parallel = values["R"] - sumKnownResistors;
+                    steps.Add("Beregning av ukjent parallellmotstand:");
+                    steps.Add($"1/R_parallell(U/I) = (1/R_kjent) + 1/R_ukjent");
+                    steps.Add($"1/{FormatNumber(R_parallel)} = {string.Join(" + ", knownResistorsInParallelGroup.Select(r => $"1/{r}"))} + 1/R_ukjent");
+
+                    double sumReciprocal = knownResistorsInParallelGroup.Sum(r => 1.0 / r);
+                    double reciprocalUnknown = (1.0 / R_parallel) - sumReciprocal;
+
+                    steps.Add($"1/R_ukjent = {FormatNumber(1 / R_parallel)} - {FormatNumber(sumReciprocal)}");
+                    steps.Add($"1/R_ukjent = {FormatNumber(reciprocalUnknown)}");
+
+                    if (reciprocalUnknown <= 0)
+                    {
+                        steps.Add("Ingen gyldig løsning - negativ motstand");
+                        utregningohm.Text = string.Join(Environment.NewLine, steps);
+                        return;
+                    }
+
+                    double unknownResistor = 1.0 / reciprocalUnknown;
+                    steps.Add($"R_ukjent = 1 / {FormatNumber(reciprocalUnknown)}");
+                    steps.Add($"R_ukjent = {FormatNumber(unknownResistor)}Ω");
+
+                    if (values.ContainsKey("U"))
+                    {
+                        steps.Add("Strømfordeling med ukjent:");
+                        var allResistors = knownResistorsInParallelGroup.Concat(new[] { unknownResistor }).ToList();
+                        foreach (var r in allResistors)
+                        {
+                            double current = values["U"] / r;
+                            steps.Add($"I = {FormatNumber(values["U"])}V / {FormatNumber(r)}Ω = {FormatNumber(current)}A");
+                        }
+                    }
+                }
+            }
+
+
             utregningohm.Text = string.Join(Environment.NewLine, steps);
         }
 
@@ -445,8 +532,8 @@ namespace Elektroformel
                     utregningfullast.Text = "Ugyldig HP/virkningsgrad-verdi";
                     return;
                 }
-                η = hpInput.Value.Value / 100; 
-                P_watts = effektInput.Value.Value * 746; 
+                η = hpInput.Value.Value / 100;
+                P_watts = effektInput.Value.Value * 746;
             }
             else
             {
@@ -489,5 +576,35 @@ namespace Elektroformel
             utregningfullast.Text = resultat;
         }
 
+        private void hovedside_Load(object sender, EventArgs e)
+        {
+            richTextBox1.Rtf = GenerateHelpRtf();
+        }
+
+        private string GenerateHelpRtf()
+        {
+            return @"{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil Segoe UI; } }
+                {\colortbl;\red23\green54\blue93;\red215\green55\blue35; }
+\viewkind4\uc1
+\pard\sa120\sl276\slmult1\cf1\b\f0\fs24 Ohm-kalkulator instruksjoner\cf0\b0\par
+
+\pard\sa120\sl276\slmult1\cf1\b Motstand(R):\cf0\b0\par
+\pard\sa80\sl220\slmult1\bullet\tab Komma , for parallelle motstander\par
+\pard\sa80\sl220\slmult1\tab Eksempel: \cf2 1, 2.5,?\cf0\par
+\pard\sa80\sl220\slmult1\bullet\tab Plus(+) for seriekoblinger\par
+\pard\sa80\sl220\slmult1\tab Eksempel: \cf2 10 + 20 +?\cf0\par
+\pard\sa80\sl220\slmult1\bullet\tab Kun en ukjent(?) tillatt\par
+\pard\sa80\sl220\slmult1\bullet\tab Ved bruk av ?, m\u197? U og I fylles ut.\par
+
+\pard\sa120\sl276\slmult1\cf1\b Spenning(V):\cf0\b0\par
+\pard\sa80\sl220\slmult1\bullet\tab Bruk V eller mV\par
+\pard\sa80\sl220\slmult1\tab Eksempel: \cf2 12V\cf0, \cf2 0.1mV\cf0, \cf2 3.7\cf0\par
+
+\pard\sa120\sl276\slmult1\cf1\b Str\u248?m(I):\cf0\b0\par
+\pard\sa80\sl220\slmult1\bullet\tab Bruk A eller mA\par
+\pard\sa80\sl220\slmult1\tab Eksempel: \cf2 2A\cf0, \cf2 500mA\cf0, \cf2 0.05\cf0\par
+}
+            ";
+        }
     }
 }

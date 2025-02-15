@@ -80,6 +80,8 @@
             regnutmoment = new Button();
             toolTip1 = new ToolTip(components);
             label22 = new Label();
+            richTextBox1 = new RichTextBox();
+            richTextBox2 = new RichTextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -145,7 +147,7 @@
             utregningohm.Name = "utregningohm";
             utregningohm.ReadOnly = true;
             utregningohm.ScrollBars = ScrollBars.Vertical;
-            utregningohm.Size = new Size(297, 111);
+            utregningohm.Size = new Size(330, 131);
             utregningohm.TabIndex = 6;
             // 
             // Motstander
@@ -555,11 +557,33 @@
             label22.Size = new Size(0, 15);
             label22.TabIndex = 52;
             // 
+            // richTextBox1
+            // 
+            richTextBox1.BackColor = SystemColors.Info;
+            richTextBox1.Location = new Point(782, 12);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.ReadOnly = true;
+            richTextBox1.Size = new Size(271, 326);
+            richTextBox1.TabIndex = 53;
+            richTextBox1.Text = "";
+            // 
+            // richTextBox2
+            // 
+            richTextBox2.BackColor = SystemColors.Info;
+            richTextBox2.Location = new Point(782, 347);
+            richTextBox2.Name = "richTextBox2";
+            richTextBox2.ReadOnly = true;
+            richTextBox2.Size = new Size(271, 379);
+            richTextBox2.TabIndex = 54;
+            richTextBox2.Text = "";
+            // 
             // hovedside
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 730);
+            ClientSize = new Size(1065, 730);
+            Controls.Add(richTextBox2);
+            Controls.Add(richTextBox1);
             Controls.Add(label22);
             Controls.Add(panel3);
             Controls.Add(panel2);
@@ -582,6 +606,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "hovedside";
             Text = "Elektroformler pt1 (Produsert av Aleksander TH)";
+            Load += hovedside_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
@@ -645,5 +670,7 @@
         private TextBox fulllasthp;
         private Label label20;
         private Label label22;
+        private RichTextBox richTextBox1;
+        private RichTextBox richTextBox2;
     }
 }
