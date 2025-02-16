@@ -71,6 +71,9 @@ namespace Elektroformel
                             }
 
                             int unknownCount = resistors.Count(r => r.IsUnknown);
+
+                            knownResistorsInParallelGroup = resistors.Where(r => !r.IsUnknown).Select(r => r.Value.Value).ToList();
+
                             if (unknownCount > 1)
                             {
                                 utregningohm.Text = "Maks én ukjent motstand per parallellgruppe.";
@@ -84,7 +87,6 @@ namespace Elektroformel
                                     return;
                                 }
                                 hasUnknownResistor = true;
-                                knownResistorsInParallelGroup = resistors.Where(r => !r.IsUnknown).Select(r => r.Value.Value).ToList();
                                 steps.Add($"Parallellkobling med ukjent: {seriesPart}");
                             }
                             else
@@ -92,16 +94,6 @@ namespace Elektroformel
                                 double parallelTotal = 1.0 / resistors.Sum(r => 1.0 / r.Value.Value);
                                 sumKnownResistors += parallelTotal;
                                 steps.Add($"Parallellkobling: {string.Join(", ", resistors.Select(r => r.Value.Value))} → {FormatNumber(parallelTotal)} Ω");
-
-                                if (values.ContainsKey("U"))
-                                {
-                                    steps.Add("Strømfordeling:");
-                                    foreach (var r in resistors)
-                                    {
-                                        double current = values["U"] / r.Value.Value;
-                                        steps.Add($"I = {FormatNumber(values["U"])}V / {FormatNumber(r.Value.Value)}Ω = {FormatNumber(current)}A");
-                                    }
-                                }
                             }
                         }
                         else
@@ -306,8 +298,15 @@ namespace Elektroformel
                         }
                     }
                 }
+            }else if(knownResistorsInParallelGroup != null && values.ContainsKey("U"))
+            {
+                    steps.Add("Strømfordeling:");
+                    foreach (var r in knownResistorsInParallelGroup)
+                    {
+                        double current = values["U"] / r;
+                        steps.Add($"I = {FormatNumber(values["U"])}V / {FormatNumber(r)}Ω = {FormatNumber(current)}A");
+                    }
             }
-
 
             utregningohm.Text = string.Join(Environment.NewLine, steps);
         }
