@@ -298,14 +298,15 @@ namespace Elektroformel
                         }
                     }
                 }
-            }else if(knownResistorsInParallelGroup != null && values.ContainsKey("U"))
+            }
+            else if (knownResistorsInParallelGroup != null && values.ContainsKey("U"))
             {
-                    steps.Add("Strømfordeling:");
-                    foreach (var r in knownResistorsInParallelGroup)
-                    {
-                        double current = values["U"] / r;
-                        steps.Add($"I = {FormatNumber(values["U"])}V / {FormatNumber(r)}Ω = {FormatNumber(current)}A");
-                    }
+                steps.Add("Strømfordeling:");
+                foreach (var r in knownResistorsInParallelGroup)
+                {
+                    double current = values["U"] / r;
+                    steps.Add($"I = {FormatNumber(values["U"])}V / {FormatNumber(r)}Ω = {FormatNumber(current)}A");
+                }
             }
 
             utregningohm.Text = string.Join(Environment.NewLine, steps);
@@ -604,6 +605,13 @@ namespace Elektroformel
 \pard\sa80\sl220\slmult1\tab Eksempel: \cf2 2A\cf0, \cf2 500mA\cf0, \cf2 0.05\cf0\par
 }
             ";
+        }
+
+        private void kabelberegning(object sender, EventArgs e)
+        {
+            if (!kabelber.Visible) {
+                kabelber.Show();
+            }
         }
     }
 }

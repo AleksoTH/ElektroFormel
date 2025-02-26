@@ -7,6 +7,8 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        private KabelBeregning kabelber = new KabelBeregning();
+
         /// <summary>
         ///  Clean up any resources being used.
         /// </summary>
@@ -82,10 +84,13 @@
             label22 = new Label();
             richTextBox1 = new RichTextBox();
             richTextBox2 = new RichTextBox();
+            groupBox2 = new GroupBox();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBox1
@@ -570,18 +575,40 @@
             // richTextBox2
             // 
             richTextBox2.BackColor = SystemColors.Info;
-            richTextBox2.Location = new Point(782, 347);
+            richTextBox2.Location = new Point(782, 440);
             richTextBox2.Name = "richTextBox2";
             richTextBox2.ReadOnly = true;
-            richTextBox2.Size = new Size(271, 379);
+            richTextBox2.Size = new Size(271, 286);
             richTextBox2.TabIndex = 54;
             richTextBox2.Text = "";
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(button1);
+            groupBox2.Location = new Point(782, 347);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(271, 76);
+            groupBox2.TabIndex = 55;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Ekstra";
+            // 
+            // button1
+            // 
+            button1.Enabled = false;
+            button1.Location = new Point(16, 22);
+            button1.Name = "button1";
+            button1.Size = new Size(104, 23);
+            button1.TabIndex = 0;
+            button1.Text = "KabelBeregning";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += kabelberegning;
             // 
             // hovedside
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1065, 730);
+            Controls.Add(groupBox2);
             Controls.Add(richTextBox2);
             Controls.Add(richTextBox1);
             Controls.Add(label22);
@@ -614,6 +641,7 @@
             panel3.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -672,5 +700,7 @@
         private Label label22;
         private RichTextBox richTextBox1;
         private RichTextBox richTextBox2;
+        private GroupBox groupBox2;
+        private Button button1;
     }
 }
