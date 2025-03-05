@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,33 +34,38 @@ namespace Elektroformel
 
             List<string> errorList = new List<string>();
 
-            if (!double.TryParse(lengdeText, out double lengde) || lengdeText == "")
+            if (!double.TryParse(lengdeText, CultureInfo.InvariantCulture, out double lengde) || lengdeText == "")
                 errorList.Add("Ugyldig kabellengde");
 
-            if (!double.TryParse(stromText, out double strom) || stromText == "")
+            if (!double.TryParse(stromText, CultureInfo.InvariantCulture, out double strom) || stromText == "")
                 errorList.Add("Ugyldig strømverdi");
 
-            if (!double.TryParse(phiText, out double phi) || phiText == "" || phi < 0 || phi > 1)
+            if (!double.TryParse(phiText, CultureInfo.InvariantCulture, out double phi) || phiText == "" || phi < 0 || phi > 1)
                 errorList.Add("Ugyldig cos phi");
 
-            if (!double.TryParse(motstandText, out double ro) || motstandText == "")
+            if (!double.TryParse(motstandText, CultureInfo.InvariantCulture, out double ro) || motstandText == "")
                 errorList.Add("Ugyldig motstandsverdi");
+
+            if (!double.TryParse(tversnittvelger.Text, CultureInfo.InvariantCulture, out double tverrsnitt) || tversnittvelger.Text == "")
+                errorList.Add("Ugyldig tverrsnitt");
 
             if (errorList.Count == 0)
             {
                 double fase = GetSelectedKjernevalg();
-                double tverrsnitt = double.Parse(motstandpermeter.Text);
 
                 double spenningsfall = (strom * ro * fase * phi * lengde) / tverrsnitt;
                 resultat.Text = $"Spenningstap: {Math.Round(spenningsfall, 2)} V";
 
-                if (double.TryParse(spenning.Text, out double un))
+                if (double.TryParse(spenning.Text, CultureInfo.InvariantCulture, out double un))
                 {
                     string resultText = resultat.Text;
                     if (spenningsfall < un)
                         resultText += Environment.NewLine + $"Spenningstap prosent: {Math.Round((spenningsfall / un) * 100, 2)} %";
                     else
                         resultText += Environment.NewLine + "Spenningstap prosent: 100 %";
+
+                    resultText += Environment.NewLine + $"Formel brukt: (I * R * C * cos(phi) * L) / TV";
+                    resultText += Environment.NewLine + $"Der I(Strøm)={strom}, R(Motstand)={ro},C(kjerner)={fase}, cos(phi)={phi}, L(KabeLengde)={lengde}, TV(Tverrsnitt)={tverrsnitt}";
 
                     resultat.Text = resultText;
                 }

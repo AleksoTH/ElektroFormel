@@ -35,8 +35,6 @@
             kjernevalg3 = new RadioButton();
             kjernevalg2 = new RadioButton();
             kjernevalg1 = new RadioButton();
-            typeinstallasjon = new ComboBox();
-            label2 = new Label();
             label3 = new Label();
             spenning = new TextBox();
             strøm = new TextBox();
@@ -45,16 +43,18 @@
             label5 = new Label();
             motstandpermeter = new TextBox();
             label6 = new Label();
-            akseptert_kabeltap = new TextBox();
-            label7 = new Label();
             resultat = new TextBox();
             kabellengde = new TextBox();
             label8 = new Label();
             cosphi = new TextBox();
             label9 = new Label();
             button1 = new Button();
-            label10 = new Label();
+            pictureBox1 = new PictureBox();
+            richTextBox1 = new RichTextBox();
+            tversnittvelger = new ComboBox();
+            label2 = new Label();
             kjernevalge.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -133,29 +133,10 @@
             kjernevalg1.Text = "1";
             kjernevalg1.UseVisualStyleBackColor = true;
             // 
-            // typeinstallasjon
-            // 
-            typeinstallasjon.FormattingEnabled = true;
-            typeinstallasjon.Items.AddRange(new object[] { "I rør", "I luftkjølt kabel holder", "I jord, direkte", "I friluft" });
-            typeinstallasjon.Location = new Point(258, 108);
-            typeinstallasjon.Name = "typeinstallasjon";
-            typeinstallasjon.Size = new Size(121, 23);
-            typeinstallasjon.TabIndex = 2;
-            typeinstallasjon.Text = "I Friluft";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(225, 90);
-            label2.Name = "label2";
-            label2.Size = new Size(93, 15);
-            label2.TabIndex = 3;
-            label2.Text = "Type installasjon";
-            // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(1, 234);
+            label3.Location = new Point(5, 293);
             label3.Name = "label3";
             label3.Size = new Size(76, 15);
             label3.TabIndex = 4;
@@ -163,14 +144,14 @@
             // 
             // spenning
             // 
-            spenning.Location = new Point(25, 252);
+            spenning.Location = new Point(29, 311);
             spenning.Name = "spenning";
             spenning.Size = new Size(100, 23);
             spenning.TabIndex = 5;
             // 
             // strøm
             // 
-            strøm.Location = new Point(25, 300);
+            strøm.Location = new Point(29, 359);
             strøm.Name = "strøm";
             strøm.Size = new Size(100, 23);
             strøm.TabIndex = 7;
@@ -178,7 +159,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(1, 282);
+            label4.Location = new Point(5, 341);
             label4.Name = "label4";
             label4.Size = new Size(53, 15);
             label4.TabIndex = 6;
@@ -188,7 +169,7 @@
             // 
             materialvalg.FormattingEnabled = true;
             materialvalg.Items.AddRange(new object[] { "Kobber", "Aluminium" });
-            materialvalg.Location = new Point(66, 361);
+            materialvalg.Location = new Point(70, 420);
             materialvalg.Name = "materialvalg";
             materialvalg.Size = new Size(121, 23);
             materialvalg.TabIndex = 8;
@@ -197,7 +178,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(19, 343);
+            label5.Location = new Point(23, 402);
             label5.Name = "label5";
             label5.Size = new Size(88, 15);
             label5.TabIndex = 9;
@@ -205,35 +186,20 @@
             // 
             // motstandpermeter
             // 
-            motstandpermeter.Location = new Point(275, 361);
+            motstandpermeter.Location = new Point(279, 420);
             motstandpermeter.Name = "motstandpermeter";
             motstandpermeter.Size = new Size(100, 23);
             motstandpermeter.TabIndex = 10;
+            motstandpermeter.Text = "0.0175";
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(238, 343);
+            label6.Location = new Point(242, 402);
             label6.Name = "label6";
             label6.Size = new Size(130, 15);
             label6.TabIndex = 11;
             label6.Text = "Motstand per meter (R)";
-            // 
-            // akseptert_kabeltap
-            // 
-            akseptert_kabeltap.Location = new Point(214, 300);
-            akseptert_kabeltap.Name = "akseptert_kabeltap";
-            akseptert_kabeltap.Size = new Size(100, 23);
-            akseptert_kabeltap.TabIndex = 13;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(190, 282);
-            label7.Name = "label7";
-            label7.Size = new Size(128, 15);
-            label7.TabIndex = 12;
-            label7.Text = "Akseptert kabeltap(%)*";
             // 
             // resultat
             // 
@@ -247,7 +213,7 @@
             // 
             // kabellengde
             // 
-            kabellengde.Location = new Point(213, 252);
+            kabellengde.Location = new Point(273, 311);
             kabellengde.Name = "kabellengde";
             kabellengde.Size = new Size(100, 23);
             kabellengde.TabIndex = 16;
@@ -255,7 +221,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(189, 234);
+            label8.Location = new Point(249, 293);
             label8.Name = "label8";
             label8.Size = new Size(94, 15);
             label8.TabIndex = 15;
@@ -263,7 +229,7 @@
             // 
             // cosphi
             // 
-            cosphi.Location = new Point(429, 300);
+            cosphi.Location = new Point(273, 359);
             cosphi.Name = "cosphi";
             cosphi.Size = new Size(100, 23);
             cosphi.TabIndex = 18;
@@ -271,15 +237,15 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(391, 282);
+            label9.Location = new Point(249, 341);
             label9.Name = "label9";
-            label9.Size = new Size(45, 15);
+            label9.Size = new Size(116, 15);
             label9.TabIndex = 17;
-            label9.Text = "cos phi";
+            label9.Text = "EffektFaktor (cosphi)";
             // 
             // button1
             // 
-            button1.Location = new Point(304, 174);
+            button1.Location = new Point(442, 203);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 19;
@@ -287,30 +253,60 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += btnCalculate_Click;
             // 
-            // label10
+            // pictureBox1
             // 
-            label10.AutoSize = true;
-            label10.Font = new Font("Segoe UI", 48F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label10.Location = new Point(391, 343);
-            label10.Name = "label10";
-            label10.Size = new Size(408, 86);
-            label10.TabIndex = 20;
-            label10.Text = "Under arbeid";
+            pictureBox1.Image = Properties.Resources.oNmS9PN;
+            pictureBox1.InitialImage = Properties.Resources.oNmS9PN;
+            pictureBox1.Location = new Point(5, 12);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(194, 278);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 20;
+            pictureBox1.TabStop = false;
+            // 
+            // richTextBox1
+            // 
+            richTextBox1.BackColor = SystemColors.Info;
+            richTextBox1.Location = new Point(441, 243);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(313, 209);
+            richTextBox1.TabIndex = 21;
+            richTextBox1.Text = "";
+            // 
+            // tversnittvelger
+            // 
+            tversnittvelger.FormattingEnabled = true;
+            tversnittvelger.Items.AddRange(new object[] { "0.5", "0.75", "1", "1.5", "2.5", "4", "6", "10", "16", "25", "35", "50", "70", "95", "120", "150", "185", " 240" });
+            tversnittvelger.Location = new Point(242, 108);
+            tversnittvelger.Name = "tversnittvelger";
+            tversnittvelger.Size = new Size(121, 23);
+            tversnittvelger.TabIndex = 22;
+            tversnittvelger.Text = "0.5";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(225, 90);
+            label2.Name = "label2";
+            label2.Size = new Size(140, 15);
+            label2.TabIndex = 23;
+            label2.Text = "Tverrsnitt på kjerne(leder)";
             // 
             // KabelBeregning
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(label10);
+            Controls.Add(label2);
+            Controls.Add(tversnittvelger);
+            Controls.Add(richTextBox1);
+            Controls.Add(pictureBox1);
             Controls.Add(button1);
             Controls.Add(cosphi);
             Controls.Add(label9);
             Controls.Add(kabellengde);
             Controls.Add(label8);
             Controls.Add(resultat);
-            Controls.Add(akseptert_kabeltap);
-            Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(motstandpermeter);
             Controls.Add(label5);
@@ -319,14 +315,13 @@
             Controls.Add(label4);
             Controls.Add(spenning);
             Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(typeinstallasjon);
             Controls.Add(kjernevalge);
             Controls.Add(label1);
             Name = "KabelBeregning";
             Text = "Form2";
             kjernevalge.ResumeLayout(false);
             kjernevalge.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -340,8 +335,6 @@
         private RadioButton kjernevalg3;
         private RadioButton kjernevalg2;
         private RadioButton kjernevalg1;
-        private ComboBox typeinstallasjon;
-        private Label label2;
         private Label label3;
         private TextBox spenning;
         private TextBox strøm;
@@ -350,14 +343,15 @@
         private Label label5;
         private TextBox motstandpermeter;
         private Label label6;
-        private TextBox akseptert_kabeltap;
-        private Label label7;
         private TextBox resultat;
         private TextBox kabellengde;
         private Label label8;
         private TextBox cosphi;
         private Label label9;
         private Button button1;
-        private Label label10;
+        private PictureBox pictureBox1;
+        private RichTextBox richTextBox1;
+        private ComboBox tversnittvelger;
+        private Label label2;
     }
 }
