@@ -22,6 +22,7 @@ namespace Elektroformel
         String[] ohmEffekt = ["R*I^2", "U^2/R", "U*I"];
         String[] ohmAmpere = ["U/R", "P/U", "sqrt(P/R)"];
         String[] ohmSPenning = ["P/I", "R*I", "sqrt(R*P)"];
+        private Form1 fase3vindu = new Form1();
 
         private void OmhRevurdering(object sender, EventArgs e)
         {
@@ -44,7 +45,11 @@ namespace Elektroformel
             if (!string.IsNullOrEmpty(inputs["R"].Text))
             {
                 string inputText = inputs["R"].Text.Replace(" ", "");
-
+                if (inputText.Contains("+") && inputText.Contains(","))
+                {
+                    utregningohm.Text = "Serie og parellel er ikke støttet i samme utregning.";
+                    return;
+                }
                 if (inputText.Contains("+") || inputText.Contains(","))
                 {
                     var seriesParts = inputText.Split('+');
@@ -609,8 +614,19 @@ namespace Elektroformel
 
         private void kabelberegning(object sender, EventArgs e)
         {
-            if (!kabelber.Visible) {
+            if (!kabelber.Visible)
+            {
+                if (kabelber.IsDisposed) kabelber = new KabelBeregning();
                 kabelber.Show();
+            }
+        }
+
+        private void Åpne3fase(object sender, EventArgs e)
+        {
+            if (!fase3vindu.Visible)
+            {
+                if (fase3vindu.IsDisposed) fase3vindu = new Form1();
+                fase3vindu.Show();
             }
         }
     }

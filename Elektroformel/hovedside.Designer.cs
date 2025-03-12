@@ -85,6 +85,7 @@
             richTextBox1 = new RichTextBox();
             richTextBox2 = new RichTextBox();
             groupBox2 = new GroupBox();
+            button2 = new Button();
             button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
@@ -584,6 +585,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(button2);
             groupBox2.Controls.Add(button1);
             groupBox2.Location = new Point(782, 347);
             groupBox2.Name = "groupBox2";
@@ -591,6 +593,16 @@
             groupBox2.TabIndex = 55;
             groupBox2.TabStop = false;
             groupBox2.Text = "Ekstra";
+            // 
+            // button2
+            // 
+            button2.Location = new Point(126, 22);
+            button2.Name = "button2";
+            button2.Size = new Size(98, 23);
+            button2.TabIndex = 1;
+            button2.Text = "3fase formler";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += Åpne3fase;
             // 
             // button1
             // 
@@ -701,5 +713,6 @@
         private RichTextBox richTextBox2;
         private GroupBox groupBox2;
         private Button button1;
+        private Button button2;
     }
 }
