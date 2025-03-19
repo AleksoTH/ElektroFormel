@@ -49,7 +49,12 @@ namespace Elektroformel
             if (!double.TryParse(tversnittvelger.Text, CultureInfo.InvariantCulture, out double tverrsnitt) || tversnittvelger.Text == "")
                 errorList.Add("Ugyldig tverrsnitt");
 
-            if (errorList.Count == 0)
+            if (ro > 0 && lengde > 0 && tverrsnitt > 0) {
+                double motstandTotal = ro * lengde / tverrsnitt;
+                resultat.Text += $"motstandTotal = ro * lengde / tverrsnitt";
+                resultat.Text += Environment.NewLine + $"Motstand: {Math.Round(motstandTotal, 3)} ohm";
+            }
+            else if (errorList.Count == 0)
             {
                 double fase = GetSelectedKjernevalg();
 
